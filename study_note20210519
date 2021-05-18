@@ -1,0 +1,12 @@
+# 4pytorch基础教程课时17
+a = torch.rand(3,3) 从[0,1]均匀随机采样3*3的矩阵
+torch.rand_like(a) *_like 接受tensor
+torch.randn(3,3) 正态分布 N(0,1) 可以自定义 
+生成一个全部值一样的tensor   torch.full([2,3],7)
+生成递增序列 torch.arange(0,10)
+等分数列 linespace/logspace   torch.linespace(0,10,step=4) step是分成几份
+torch.ones(3,3) torch.zeros(3,3)
+torch.eye(3) 生成主对角有数的单位矩阵
+torch.randperm(10) 生成随机索引 用途：使用shuffle时形成对应
+
+
