@@ -1,0 +1,98 @@
+#4.18索引与切片
+a=torch.rand(4,3,28,28) 以图像为例 4个维度分别代表 [batch_size,channel,Height,Weight]
+a[0].shape  torch.Size([3,28,28])
+a[0,0].shape torch.Size([28,28])
+a[0,0,2,4] 第0张图片的第0个通道的第2行第4列的像素点 tensor(0.8082)
+select by steps a[:,:,0:28:2,0:28:2].shape torch.Size([4,3,14,14])
+#4.19
+a.index_select(0,[0,2]).shape  针对第一个维度 选第一张图片和第3张图片  out:torch.Size([2,3,28,28])
+a[...].shape   ...表示任意多的维度 在不同情况不一样  out:torch.Size([4,3,28,28])
+a[0,...].shape = a[0,:,:,:] = a[0] torch.Size([3,28,28])
+a[:,1,...].shape 取所有图片的第一个通道的所有维度 out:torch.Size([4,28,28])
+
+select by mask
+x = torch.randn(3,4)
+mask = x.ge(0.5) 把数据打平 然后找到大于等于0.5的数
+
+torch.masked_select(x,mask)
+
+```python
+torch.ge
+torch.ge(input, other, out=None) → Tensor
+逐元素比较input和other，即是否 input>=otherinput>=other。
+
+如果两个张量有相同的形状和元素值，则返回True ，否则 False。 第二个参数可以为一个数或与第一个参数相同形状和类型的张量
+
+参数:
+
+input (Tensor) – 待对比的张量
+other (Tensor or float) – 对比的张量或float值
+out (Tensor, optional) – 输出张量。必须为ByteTensor或者与第一个参数tensor相同类型。
+返回值： 一个 torch.ByteTensor 张量，包含了每个位置的比较结果(是否 input >= other )。 返回类型： Tensor
+
+例子：
+
+>>> torch.ge(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 1  1
+ 0  1
+[torch.ByteTensor of size 2x2]
+
+torch.gt
+torch.gt(input, other, out=None) → Tensor
+逐元素比较input和other ， 即是否input>otherinput>other 如果两个张量有相同的形状和元素值，则返回True ，否则 False。 第二个参数可以为一个数或与第一个参数相同形状和类型的张量
+
+参数:
+
+input (Tensor) – 要对比的张量
+other (Tensor or float) – 要对比的张量或float值
+out (Tensor, optional) – 输出张量。必须为ByteTensor或者与第一个参数tensor相同类型。
+返回值： 一个 torch.ByteTensor 张量，包含了每个位置的比较结果(是否 input >= other )。 返回类型： Tensor
+
+例子：
+
+>>> torch.gt(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 0  1
+ 0  0
+[torch.ByteTensor of size 2x2]
+
+torch.le
+torch.le(input, other, out=None) → Tensor
+逐元素比较input和other ， 即是否input<=otherinput<=other 第二个参数可以为一个数或与第一个参数相同形状和类型的张量
+
+参数:
+
+input (Tensor) – 要对比的张量
+other (Tensor or float ) – 对比的张量或float值
+out (Tensor, optional) – 输出张量。必须为ByteTensor或者与第一个参数tensor相同类型。
+返回值： 一个 torch.ByteTensor 张量，包含了每个位置的比较结果(是否 input >= other )。 返回类型： Tensor
+
+例子：
+
+>>> torch.le(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 1  0
+ 1  1
+[torch.ByteTensor of size 2x2]
+torch.lt
+torch.lt(input, other, out=None) → Tensor
+逐元素比较input和other ， 即是否 input<otherinput<other
+
+第二个参数可以为一个数或与第一个参数相同形状和类型的张量
+
+参数:
+
+input (Tensor) – 要对比的张量
+other (Tensor or float ) – 对比的张量或float值
+out (Tensor, optional) – 输出张量。必须为ByteTensor或者与第一个参数tensor相同类型。
+input： 一个 torch.ByteTensor 张量，包含了每个位置的比较结果(是否 tensor >= other )。 返回类型： Tensor
+
+例子：
+
+>>> torch.lt(torch.Tensor([[1, 2], [3, 4]]), torch.Tensor([[1, 1], [4, 4]]))
+ 0  0
+ 1  0
+[torch.ByteTensor of size 2x2]
+```
+
+src = torch.tensor([[4,3,5],[6,7,8]])
+
+torch.take(src,torch.tensor([0,2,6])) 先把tensor打平 (2,3) --> (1,6)   out:tensor([4,5,8])
