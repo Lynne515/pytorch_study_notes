@@ -1,0 +1,89 @@
+### 维度变换
+
+- view/reshape 这两个功能相同 版本过度为了与numpy相通
+
+  ```python
+  a=torch.rand(4,1,28,28)
+  a.shape
+  > torch.Size([4,1,28,28])
+  a.view(4,28*28) 把后面1,28,28合并 物理意义是将channel与height width合并 方便送入全连接网络
+  不变的是数据本身 变得是理解
+  缺点：如果不额外记录维度信息 恢复会出错
+  ```
+
+- squeeze压缩 unsqueeze展开
+
+  ```python
+  a.unsqueeze(0).shape
+  > torch.Size([1,4,1,28,28]) 物理意义：增加了一个组 unsqueeze(index) 因不改变数据 所以插入的都是1
+  a=torch.tensor([1.2,2.3])  tensor里的是数据本身 
+  a.shape > [2]
+  a.unsqueeze(-1) > shape:[1,2]
+  a > tensor([[1.2000],
+              [2.3000]])
+  
+  
+  b.shape > torch.Size([1,32,1,1])
+  b.squeeze().shape > torch.Size([32]) 如果squeeze()里面没有给参数 那么就把维度=1的都压缩
+  b.squeeze(0).shape > torch.Size([32,1,1])
+  
+  ```
+
+- expand/repeat 扩展维度
+
+  不同点：expand只是改变了数据的理解方式 没有改变数据    repeat是实实在在的增加了数据，会复制数据
+
+  效果等效，推荐使用expand
+
+  expand只会在有需要的时候复制数据
+  
+  ```python
+  a = torch.rand(4,32,14,14)
+  b.shape
+  >torch.Size([1,32,1,1])
+  b.expand(4,32,14,14).shape
+  >torch.Size([4,32,14,14])
+  ```
+  
+  expand 只能拓展dimension为1的 expand的参数给的是新的shape
+  
+- repeat
+
+  repeat的参数给的数每个维度需要拷贝的次数
+
+  ```python
+  b.shape
+  > torch.Size([1,32,1,1])
+  b.repeat(4,32,1,1).shape  表示第一个维度复制4次 第二个维度复制32次 第三个维度复制1次 第四个维度复制1次
+  >torch.Size([4,1024,1,1])
+  ```
+
+- 矩阵转置 维度交换
+
+  a.t()只能用于二维矩阵
+
+  ```
+  a = torch.randn(3,4)
+  a.t() > shape [4,3]
+  ```
+
+  Transpose
+
+  ```
+  a.shape > [4,3,32,32]
+  数据经过转置后不连续 用.contiguous()
+  数据比较
+  torch.all(torch.eq(a,a1)) > tensor(0,dtype=torch.uint8) 0表示FALSE
+  
+  ```
+  
+  permute
+  
+  ```
+  b = torch.rand(4,3,28,32)
+  b.permute(0,2,3,2).shape
+  >torch.Size([4,28,32,2])
+  ```
+  
+  
+
